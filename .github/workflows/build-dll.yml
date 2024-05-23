@@ -40,19 +40,12 @@ jobs:
         - name: Compile Go program for ${{ matrix.os }} ${{ matrix.arch }}
           run: |
             if [ "${{ matrix.os }}" = "windows-latest" ]; then
-              export GOOS=windows
-            elif [ "${{ matrix.os }}" = "macos-latest" ]; then
-              export GOOS=darwin
-            else
-              export GOOS=linux
-            fi
-            export GOARCH=${{ matrix.arch }}
-            if [ "${{ matrix.os }}" = "windows-latest" ]; then
               ./bootstrap_install_mage.bat
+              mage ${{ matrix.build }}
             else
               sudo bash bootstrap_install_mage.sh
+              sudo mage ${{ matrix.build }}
             fi
-            mage ${{ matrix.build }}
   
         - name: Upload Artifacts
           uses: actions/upload-artifact@v4
