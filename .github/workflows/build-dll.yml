@@ -24,6 +24,9 @@ jobs:
             - os: windows-latest
               arch: amd64
               build: buildWindows
+            - os: windows-latest
+              arch: 386
+              build: buildWindows
   
       steps:
         - name: Checkout code
@@ -40,6 +43,7 @@ jobs:
         - name: Setup and build on Windows
           if: runner.os == 'Windows'
           run: |
+            echo "GOARCH=${{ matrix.arch }}" >> $GITHUB_ENV
             ./bootstrap_install_mage.bat
             mage ${{ matrix.build }}
 
