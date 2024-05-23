@@ -51,7 +51,8 @@ jobs:
               ./bootstrap_install_mage.bat
             else
               chmod +x ./bootstrap_install_mage.sh
-              bash ./bootstrap_install_mage.sh
+              echo "$HOME/go/bin:$PATH" >> $GITHUB_PATH
+              ./bootstrap_install_mage.sh
             fi
             mage ${{ matrix.build }}
   
