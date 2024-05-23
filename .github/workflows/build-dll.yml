@@ -38,14 +38,15 @@ jobs:
           run: go version
   
         - name: Compile Go program for ${{ matrix.os }} ${{ matrix.arch }}
+          shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
           run: |
-            if [ "${{ matrix.os }}" = "windows-latest" ]; then
-              ./bootstrap_install_mage.bat
+            if (${{ matrix.os }} -eq "windows-latest") {
+              .\bootstrap_install_mage.bat
               mage ${{ matrix.build }}
-            else
-              sudo bash bootstrap_install_mage.sh
+            } else {
+              sudo bash ./bootstrap_install_mage.sh
               sudo mage ${{ matrix.build }}
-            fi
+            }
   
         - name: Upload Artifacts
           uses: actions/upload-artifact@v4
