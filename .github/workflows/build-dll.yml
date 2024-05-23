@@ -4,43 +4,59 @@ on:
     workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: windows-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    # - name: Set up Python
-    #   uses: actions/setup-python@v5
-    #   with:
-    #     python-version: '3.9'
-
-    # - name: Install MinGW-w64
-    #   run: |
-    #     choco install mingw
-
-    # - name: Configure Environment
-    #   run: |
-    #     echo "C:\ProgramData\chocolatey\bin" >> $GITHUB_PATH
-    #     echo "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin" >> $GITHUB_PATH
-
-    - name: Setup Go environment
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.22'  # Specify the version of Go you want to install
-
-    - name: Check Go version
-      run: go version
-
-    - name: Compile Go program
-      run: |
-        dir
-        ./bootstrap_install_mage.bat
-        mage buildWindows
-
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: windows-build-artifacts
-        path: shared/windows/
+    build:
+      runs-on: ${{ matrix.os }}
+      strategy:
+        matrix:
+          include:
+            - os: ubuntu-latest
+              arch: amd64
+              build: buildLinux
+            - os: ubuntu-latest
+              arch: arm64
+              build: buildLinux
+            - os: macos-latest
+              arch: amd64
+              build: buildIOS
+            - os: macos-latest
+              arch: arm64
+              build: buildIOS
+            - os: windows-latest
+              arch: amd64
+              build: buildWindows
+  
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+  
+        - name: Setup Go environment
+          uses: actions/setup-go@v5
+          with:
+            go-version: '1.22'
+  
+        - name: Check Go version
+          run: go version
+  
+        - name: Compile Go program for ${{ matrix.os }} ${{ matrix.arch }}
+          run: |
+            if [ "${{ matrix.os }}" = "windows-latest" ]; then
+              export GOOS=windows
+            elif [ "${{ matrix.os }}" = "macos-latest" ]; then
+              export GOOS=darwin
+            else
+              export GOOS=linux
+            fi
+            export GOARCH=${{ matrix.arch }}
+            if [ "${{ matrix.os }}" = "windows-latest" ]; then
+              ./bootstrap_install_mage.bat
+            else
+              ./bootstrap_install_mage.sh
+            fi
+            mage ${{ matrix.build }}
+  
+        - name: Upload Artifacts
+          uses: actions/upload-artifact@v4
+          with:
+            name: ${{ matrix.os }}-${{ matrix.arch }}-assets
+            path: shared/${{ (matrix.os == 'macos-latest' && 'ios' || (matrix.os == 'windows-latest' && 'windows' || 'linux')) }}/
+  

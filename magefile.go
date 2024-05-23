@@ -57,8 +57,6 @@ func BuildAndroid() error {
 func BuildIOS() error {
 	fmt.Println("Building for iOS...")
 	outPath += "ios"
-	os.Setenv("GOOS", "darwin")
-	os.Setenv("GOARCH", "arm64")
 	os.Setenv("CGO_ENABLED", "1")
 	os.Setenv("CC", "clang")
 
@@ -82,8 +80,6 @@ func BuildLinux() error {
 
 	outPath += "linux"
 
-	os.Setenv("GOOS", "linux")
-	os.Setenv("GOARCH", "amd64")
 	os.Setenv("CGO_ENABLED", "1")
 	os.Setenv("CC", "gcc") //
 
@@ -107,8 +103,6 @@ func BuildWindows() error {
 
 	outPath += "windows"
 
-	os.Setenv("GOOS", "windows")
-	os.Setenv("GOARCH", "amd64")
 	os.Setenv("CGO_ENABLED", "1")
 	os.Setenv("CC", "gcc")
 
