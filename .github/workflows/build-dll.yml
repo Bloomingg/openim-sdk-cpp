@@ -37,16 +37,17 @@ jobs:
         - name: Check Go version
           run: go version
   
-        - name: Compile Go program for ${{ matrix.os }} ${{ matrix.arch }}
-          shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
+        - name: Setup and build on Windows
+          if: ${{ matrix.os }} == 'windows-latest'
           run: |
-            if (${{ matrix.os }} -eq "windows-latest") {
-              .\bootstrap_install_mage.bat
-              mage ${{ matrix.build }}
-            } else {
-              sudo bash ./bootstrap_install_mage.sh
-              sudo mage ${{ matrix.build }}
-            }
+            ./bootstrap_install_mage.bat
+            mage ${{ matrix.build }}
+
+        - name: Setup and build on ${{ matrix.os }} ${{ matrix.arch }}
+          if: ${{ matrix.os }} != 'windows-latest'
+          run: |
+            sudo bash ./bootstrap_install_mage.sh
+            sudo mage ${{ matrix.build }}
   
         - name: Upload Artifacts
           uses: actions/upload-artifact@v4
