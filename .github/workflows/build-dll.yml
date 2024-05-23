@@ -50,6 +50,7 @@ jobs:
             if [ "${{ matrix.os }}" = "windows-latest" ]; then
               ./bootstrap_install_mage.bat
             else
+              chmod +x ./bootstrap_install_mage.sh
               ./bootstrap_install_mage.sh
             fi
             mage ${{ matrix.build }}
