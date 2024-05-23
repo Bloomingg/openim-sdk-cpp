@@ -20,4 +20,4 @@ fi
 
 echo "Mage installed successfully."
 
-go mod download
+# go mod download
