@@ -11,19 +11,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.9'
+    # - name: Set up Python
+    #   uses: actions/setup-python@v5
+    #   with:
+    #     python-version: '3.9'
 
-    - name: Install MinGW-w64
-      run: |
-        choco install mingw
+    # - name: Install MinGW-w64
+    #   run: |
+    #     choco install mingw
 
-    - name: Configure Environment
-      run: |
-        echo "C:\ProgramData\chocolatey\bin" >> $GITHUB_PATH
-        echo "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin" >> $GITHUB_PATH
+    # - name: Configure Environment
+    #   run: |
+    #     echo "C:\ProgramData\chocolatey\bin" >> $GITHUB_PATH
+    #     echo "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin" >> $GITHUB_PATH
 
     - name: Setup Go environment
       uses: actions/setup-go@v5
@@ -36,5 +36,5 @@ jobs:
     - name: Compile Go program
       run: |
         dir
-        bootstrap_install_mage.bat
+        ./bootstrap_install_mage.bat
         mage buildWindows
