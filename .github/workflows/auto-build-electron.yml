@@ -12,9 +12,9 @@ jobs:
             - os: ubuntu-latest
               arch: amd64
               build: buildLinux
-            - os: ubuntu-latest
-              arch: arm64
-              build: buildLinux
+            # - os: ubuntu-latest
+            #   arch: arm64
+            #   build: buildLinux
             - os: macos-latest
               arch: amd64
               build: buildIOS
@@ -24,9 +24,9 @@ jobs:
             - os: windows-latest
               arch: amd64
               build: buildWindows
-            - os: windows-latest
-              arch: 386
-              build: buildWindows
+            # - os: windows-latest
+            #   arch: 386
+            #   build: buildWindows
   
       steps:
         - name: Checkout code
@@ -43,7 +43,6 @@ jobs:
         - name: Setup and build on Windows ${{ matrix.arch }}
           if: runner.os == 'Windows'
           run: |
-            echo "GOARCH=${{ matrix.arch }}" >> $GITHUB_ENV
             ./bootstrap_install_mage.bat
             mage ${{ matrix.build }}
 
@@ -51,7 +50,8 @@ jobs:
           if: runner.os != 'Windows'
           run: |
             sudo bash ./bootstrap_install_mage.sh
-            sudo mage ${{ matrix.build }}
+            export GOARCH=${{ matrix.arch }}  # Set GOARCH here
+            sudo -E mage ${{ matrix.build }}  # Ensure sudo preserves the environment
   
         - name: Upload Artifacts
           uses: actions/upload-artifact@v4
