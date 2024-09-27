@@ -58,7 +58,7 @@ jobs:
           if: runner.os != 'Windows'
           run: |
             sudo bash ./bootstrap_install_mage.sh
-            echo "GOARCH=${{ matrix.arch }}" >> $GITHUB_ENV
+            export GOARCH=${{ matrix.arch }}
             sudo -E mage ${{ matrix.build }}
   
         - name: Upload Artifacts
