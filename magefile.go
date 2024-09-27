@@ -26,13 +26,7 @@ func Build() {
 	if err := BuildIOS(); err != nil {
 		fmt.Println("Error building for iOS:", err)
 	}
-	if err := BuildIOSAmd64(); err != nil {
-		fmt.Println("Error building for iOS:", err)
-	}
 	if err := BuildLinux(); err != nil {
-		fmt.Println("Error building for Linux:", err)
-	}
-	if err := BuildLinuxArm64(); err != nil {
 		fmt.Println("Error building for Linux:", err)
 	}
 	if err := BuildWindows(); err != nil {
@@ -61,34 +55,16 @@ func BuildAndroid() error {
 
 // BuildIOS compiles the project for iOS.
 func BuildIOS() error {
-	fmt.Println("Building for iOS...", os.Getenv("GOARCH"))
+	fmt.Println("Building for iOS...")
 	outPath += "ios"
+	arch := os.Getenv("GOARCH")
 
-	os.Setenv("GOOS", "darwin")
-	os.Setenv("GOARCH", "arm64")
-	os.Setenv("CGO_ENABLED", "1")
-	os.Setenv("CC", "clang")
-
-	cmd := exec.Command("go", "build", "-buildmode=c-shared", "-o", outPath+"/"+soName+".dylib", ".")
-	cmd.Dir = goSrc
-	cmd.Env = os.Environ()
-	cmd.Stderr = os.Stderr
-	cmd.Stdout = os.Stdout
-
-	if err := cmd.Run(); err != nil {
-		fmt.Printf("Failed to build for iOS: %v\n", err)
-		return err
+	if len(arch) == 0 {
+		arch = runtime.GOARCH
 	}
-	fmt.Println("Build for iOS completed successfully.")
-	return nil
-}
-
-func BuildIOSAmd64() error {
-	fmt.Println("Building for iOS...", os.Getenv("GOARCH"))
-	outPath += "ios"
 
 	os.Setenv("GOOS", "darwin")
-	os.Setenv("GOARCH", "amd64")
+	os.Setenv("GOARCH", arch)
 	os.Setenv("CGO_ENABLED", "1")
 	os.Setenv("CC", "clang")
 
@@ -111,36 +87,26 @@ func BuildLinux() error {
 	fmt.Println("Building for Linux...", os.Getenv("GOARCH"), os.Getenv("CC"), os.Getenv("CXX"))
 
 	outPath += "linux"
+	arch := os.Getenv("GOARCH")
+	cc := os.Getenv("CC")
+	cxx := os.Getenv("CXX")
 
-	os.Setenv("GOOS", "linux")
-	os.Setenv("GOARCH", "amd64")
-	os.Setenv("CGO_ENABLED", "1")
-	os.Setenv("CC", "gcc") //
-
-	cmd := exec.Command("go", "build", "-buildmode=c-shared", "-trimpath", "-ldflags=-s -w", "-o", outPath+"/"+soName+".so", ".")
-	cmd.Dir = goSrc
-	cmd.Env = os.Environ()
-	cmd.Stderr = os.Stderr
-	cmd.Stdout = os.Stdout
-
-	if err := cmd.Run(); err != nil {
-		fmt.Printf("Failed to build for Linux: %v\n", err)
-		return err
+	if len(arch) == 0 {
+		arch = runtime.GOARCH
 	}
-	fmt.Println("Build for Linux completed successfully.")
-	return nil
-}
 
-func BuildLinuxArm64() error {
-	fmt.Println("Building for Linux...", os.Getenv("GOARCH"))
+	if len(cc) == 0 {
+		cc = "gcc"
+	}
 
-	outPath += "linux"
+	if len(cxx) != 0 {
+		os.Setenv("CXX", cxx)
+	}
 
 	os.Setenv("GOOS", "linux")
-	os.Setenv("GOARCH", "arm64")
+	os.Setenv("GOARCH", arch)
 	os.Setenv("CGO_ENABLED", "1")
-	os.Setenv("CC", "aarch64-linux-gnu-gcc")
-	os.Setenv("CXX", "aarch64-linux-gnu-g++")
+	os.Setenv("CC", cc) //
 
 	cmd := exec.Command("go", "build", "-buildmode=c-shared", "-trimpath", "-ldflags=-s -w", "-o", outPath+"/"+soName+".so", ".")
 	cmd.Dir = goSrc
