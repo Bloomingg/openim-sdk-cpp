@@ -35,9 +35,6 @@ func Build() {
 	if err := BuildWindows(); err != nil {
 		fmt.Println("Error building for Windows:", err)
 	}
-	if err := BuildWindows386(); err != nil {
-		fmt.Println("Error building for Windows:", err)
-	}
 }
 
 // BuildAndroid compiles the project for Android.
