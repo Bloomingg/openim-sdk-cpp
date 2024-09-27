@@ -29,7 +29,13 @@ func Build() {
 	if err := BuildLinux(); err != nil {
 		fmt.Println("Error building for Linux:", err)
 	}
+	if err := BuildLinuxArm64(); err != nil {
+		fmt.Println("Error building for Linux:", err)
+	}
 	if err := BuildWindows(); err != nil {
+		fmt.Println("Error building for Windows:", err)
+	}
+	if err := BuildWindows386(); err != nil {
 		fmt.Println("Error building for Windows:", err)
 	}
 }
@@ -104,16 +110,63 @@ func BuildLinux() error {
 	return nil
 }
 
+func BuildLinuxArm64() error {
+	fmt.Println("Building for Linux...")
+
+	outPath += "linux"
+
+	os.Setenv("GOOS", "linux")
+	os.Setenv("GOARCH", "arm64")
+	os.Setenv("CGO_ENABLED", "1")
+	os.Setenv("CC", "aarch64-linux-gnu-gcc")
+	os.Setenv("CXX", "aarch64-linux-gnu-g++")
+
+	cmd := exec.Command("go", "build", "-buildmode=c-shared", "-trimpath", "-ldflags=-s -w", "-o", outPath+"/"+soName+".so", ".")
+	cmd.Dir = goSrc
+	cmd.Env = os.Environ()
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
+
+	if err := cmd.Run(); err != nil {
+		fmt.Printf("Failed to build for Linux: %v\n", err)
+		return err
+	}
+	fmt.Println("Build for Linux completed successfully.")
+	return nil
+}
+
 // BuildWindows compiles the project for Windows.
 func BuildWindows() error {
 	fmt.Println("Building for Windows...")
 
 	outPath += "windows"
 
-	arch := os.Getenv("GOARCH")
+	os.Setenv("GOOS", "windows")
+	os.Setenv("GOARCH", "amd64")
+	os.Setenv("CGO_ENABLED", "1")
+	os.Setenv("CC", "gcc")
+
+	cmd := exec.Command("go", "build", "-buildmode=c-shared", "-trimpath", "-ldflags=-s -w", "-o", outPath+"/"+soName+".dll", ".")
+	cmd.Dir = goSrc
+	cmd.Env = os.Environ()
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
+
+	if err := cmd.Run(); err != nil {
+		fmt.Printf("Failed to build for Windows: %v\n", err)
+		return err
+	}
+	fmt.Println("Build for Windows completed successfully.")
+	return nil
+}
+
+func BuildWindows386() error {
+	fmt.Println("Building for Windows...")
+
+	outPath += "windows"
 
 	os.Setenv("GOOS", "windows")
-	os.Setenv("GOARCH", arch)
+	os.Setenv("GOARCH", "386")
 	os.Setenv("CGO_ENABLED", "1")
 	os.Setenv("CC", "gcc")
 
