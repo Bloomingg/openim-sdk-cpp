@@ -17,7 +17,7 @@ jobs:
               build: buildLinuxArm64
             - os: macos-latest
               arch: amd64
-              build: buildIOS
+              build: buildIOSAmd64
             - os: macos-latest
               arch: arm64
               build: buildIOS
