@@ -108,7 +108,7 @@ func BuildIOSAmd64() error {
 
 // BuildLinux compiles the project for Linux.
 func BuildLinux() error {
-	fmt.Println("Building for Linux...", os.Getenv("GOARCH"))
+	fmt.Println("Building for Linux...", os.Getenv("GOARCH"), os.Getenv("CC"), os.Getenv("CXX"))
 
 	outPath += "linux"
 
