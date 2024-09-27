@@ -9,24 +9,24 @@ jobs:
       strategy:
         matrix:
           include:
-            # - os: ubuntu-latest
-            #   arch: amd64
-            #   build: buildLinux
+            - os: ubuntu-latest
+              arch: amd64
+              build: buildLinux
             - os: ubuntu-latest
               arch: arm64
               build: buildLinuxArm64
-            # - os: macos-latest
-            #   arch: amd64
-            #   build: buildIOS
-            # - os: macos-latest
-            #   arch: arm64
-            #   build: buildIOS
-            # - os: windows-latest
-            #   arch: amd64
-            #   build: buildWindows
+            - os: macos-latest
+              arch: amd64
+              build: buildIOS
+            - os: macos-latest
+              arch: arm64
+              build: buildIOS
             - os: windows-latest
-              arch: 386
-              build: buildWindows386
+              arch: amd64
+              build: buildWindows
+            # - os: windows-latest
+            #   arch: 386
+            #   build: buildWindows386
   
       steps:
         - name: Checkout code

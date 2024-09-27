@@ -61,12 +61,12 @@ func BuildAndroid() error {
 
 // BuildIOS compiles the project for iOS.
 func BuildIOS() error {
-	fmt.Println("Building for iOS...")
+	fmt.Println("Building for iOS...", os.Getenv("GOARCH"))
 	outPath += "ios"
-	arch := os.Getenv("GOARCH")
+	// arch := os.Getenv("GOARCH")
 
 	os.Setenv("GOOS", "darwin")
-	os.Setenv("GOARCH", arch)
+	// os.Setenv("GOARCH", arch)
 	os.Setenv("CGO_ENABLED", "1")
 	os.Setenv("CC", "clang")
 
@@ -86,13 +86,12 @@ func BuildIOS() error {
 
 // BuildLinux compiles the project for Linux.
 func BuildLinux() error {
-	fmt.Println("Building for Linux...")
+	fmt.Println("Building for Linux...", os.Getenv("GOARCH"))
 
 	outPath += "linux"
-	arch := os.Getenv("GOARCH")
 
 	os.Setenv("GOOS", "linux")
-	os.Setenv("GOARCH", arch)
+	os.Setenv("GOARCH", "amd64")
 	os.Setenv("CGO_ENABLED", "1")
 	os.Setenv("CC", "gcc") //
 
@@ -111,15 +110,15 @@ func BuildLinux() error {
 }
 
 func BuildLinuxArm64() error {
-	fmt.Println("Building for Linux...")
+	fmt.Println("Building for Linux...", os.Getenv("GOARCH"))
 
 	outPath += "linux"
 
 	os.Setenv("GOOS", "linux")
 	os.Setenv("GOARCH", "arm64")
 	os.Setenv("CGO_ENABLED", "1")
-	os.Setenv("CC", "aarch64-linux-gnu-gcc")
-	os.Setenv("CXX", "aarch64-linux-gnu-g++")
+	// os.Setenv("CC", "aarch64-linux-gnu-gcc")
+	// os.Setenv("CXX", "aarch64-linux-gnu-g++")
 
 	cmd := exec.Command("go", "build", "-buildmode=c-shared", "-trimpath", "-ldflags=-s -w", "-o", outPath+"/"+soName+".so", ".")
 	cmd.Dir = goSrc
@@ -143,30 +142,6 @@ func BuildWindows() error {
 
 	os.Setenv("GOOS", "windows")
 	os.Setenv("GOARCH", "amd64")
-	os.Setenv("CGO_ENABLED", "1")
-	os.Setenv("CC", "gcc")
-
-	cmd := exec.Command("go", "build", "-buildmode=c-shared", "-trimpath", "-ldflags=-s -w", "-o", outPath+"/"+soName+".dll", ".")
-	cmd.Dir = goSrc
-	cmd.Env = os.Environ()
-	cmd.Stderr = os.Stderr
-	cmd.Stdout = os.Stdout
-
-	if err := cmd.Run(); err != nil {
-		fmt.Printf("Failed to build for Windows: %v\n", err)
-		return err
-	}
-	fmt.Println("Build for Windows completed successfully.")
-	return nil
-}
-
-func BuildWindows386() error {
-	fmt.Println("Building for Windows...")
-
-	outPath += "windows"
-
-	os.Setenv("GOOS", "windows")
-	os.Setenv("GOARCH", "386")
 	os.Setenv("CGO_ENABLED", "1")
 	os.Setenv("CC", "gcc")
 
