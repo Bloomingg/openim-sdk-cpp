@@ -32,6 +32,9 @@ func Build() {
 	if err := BuildWindows(); err != nil {
 		fmt.Println("Error building for Windows:", err)
 	}
+	if err := BuildWindows386(); err != nil {
+		fmt.Println("Error building for Windows:", err)
+	}
 }
 
 // BuildAndroid compiles the project for Android.
@@ -144,6 +147,35 @@ func BuildWindows() error {
 		return err
 	}
 	fmt.Println("Build for Windows completed successfully.")
+	return nil
+}
+
+func BuildWindows386() error {
+	fmt.Println("Building for Windows...", os.Getenv("GOARCH"))
+
+	// outPath += "windows"
+	// arch := os.Getenv("GOARCH")
+
+	// if len(arch) == 0 {
+	// 	arch = runtime.GOARCH
+	// }
+
+	// os.Setenv("GOOS", "windows")
+	// os.Setenv("GOARCH", arch)
+	// os.Setenv("CGO_ENABLED", "1")
+	// os.Setenv("CC", "gcc")
+
+	// cmd := exec.Command("go", "build", "-buildmode=c-shared", "-trimpath", "-ldflags=-s -w", "-o", outPath+"/"+soName+".dll", ".")
+	// cmd.Dir = goSrc
+	// cmd.Env = os.Environ()
+	// cmd.Stderr = os.Stderr
+	// cmd.Stdout = os.Stdout
+
+	// if err := cmd.Run(); err != nil {
+	// 	fmt.Printf("Failed to build for Windows: %v\n", err)
+	// 	return err
+	// }
+	// fmt.Println("Build for Windows completed successfully.")
 	return nil
 }
 
