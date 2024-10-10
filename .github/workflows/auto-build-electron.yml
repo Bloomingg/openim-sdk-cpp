@@ -55,17 +55,13 @@ jobs:
             # 解压文件
             7z x mingw32.7z -oC:/mingw32
             # 将 32 位工具链路径添加到 PATH
-            $env:PATH = "C:/mingw32/bin;$env:PATH"
+            echo "C:/mingw32/bin" >> $env:GITHUB_ENV  # 将 MinGW 路径添加到 GITHUB_ENV
             gcc --version  # 验证 gcc 版本是否为 32 位
-            ./bootstrap_install_mage.bat
-            $env:GOARCH="${{ matrix.arch }}"
-            $env:CC="gcc -m32"
-            $env:CXX="g++ -m32"
-            mage ${{ matrix.build }}
 
-        # - name: Setup and build on Windows ${{ matrix.arch }}
-        #   if: runner.os == 'Windows'
-        #   run: |
+        - name: Setup and build on Windows ${{ matrix.arch }}
+          if: runner.os == 'Windows'
+          run: |
+            gcc --version  # 验证 gcc 版本是否为 32 位
         #     ./bootstrap_install_mage.bat
         #     $env:GOARCH="${{ matrix.arch }}"
         #     if ($env:GOARCH -eq "386") {
