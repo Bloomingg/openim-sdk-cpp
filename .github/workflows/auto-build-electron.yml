@@ -51,8 +51,8 @@ jobs:
         - name: Setup and build on Windows ${{ matrix.arch }}
           if: runner.os == 'Windows'
           run: |
-            set GOARCH=${{ matrix.arch }}
-            echo "GOARCH is set to %GOARCH%"
+            $env:GOARCH="${{ matrix.arch }}"
+            echo "GOARCH is set to $env:GOARCH"
 
         # - name: Setup and build on Windows ${{ matrix.arch }}
         #   if: runner.os == 'Windows'
