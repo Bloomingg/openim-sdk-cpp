@@ -29,16 +29,16 @@ jobs:
               build: buildWindows386
   
       steps:
-        # - name: Checkout code
-        #   uses: actions/checkout@v4
+        - name: Checkout code
+          uses: actions/checkout@v4
   
-        # - name: Setup Go environment
-        #   uses: actions/setup-go@v5
-        #   with:
-        #     go-version: '1.22'
+        - name: Setup Go environment
+          uses: actions/setup-go@v5
+          with:
+            go-version: '1.22'
   
-        # - name: Check Go version
-        #   run: go version
+        - name: Check Go version
+          run: go version
 
         # - name: Install ARM64 cross-compilation toolchain
         #   if: matrix.arch == 'arm64' && matrix.os == 'ubuntu-latest'
