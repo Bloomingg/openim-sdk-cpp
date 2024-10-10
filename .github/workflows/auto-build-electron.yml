@@ -48,11 +48,21 @@ jobs:
         #     echo "CC=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
         #     echo "CXX=aarch64-linux-gnu-g++" >> $GITHUB_ENV
 
+        - name: Install MinGW-w64 using Chocolatey
+          run: |
+            choco install mingw --version=8.1.0 --params "/Threads:x86 /Arch:32" # 32 位工具链
+            echo "C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin" >> $env:GITHUB_PATH
+            gcc --version # 检查安装是否成功
+
         - name: Setup and build on Windows ${{ matrix.arch }}
           if: runner.os == 'Windows'
           run: |
             ./bootstrap_install_mage.bat
             $env:GOARCH="${{ matrix.arch }}"
+            if ($env:GOARCH -eq "386") {
+              $env:CC="gcc -m32"
+              $env:CXX="g++ -m32"
+            }
             mage ${{ matrix.build }}
 
         # - name: Setup and build on Windows ${{ matrix.arch }}
