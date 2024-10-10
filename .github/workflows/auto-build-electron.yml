@@ -50,8 +50,8 @@ jobs:
 
         - name: Install MinGW-w64 using Chocolatey
           run: |
-            # 下载 32 位 MinGW 工具链
-            Invoke-WebRequest -Uri https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/8.1.0/threads-posix/dwarf/i686-8.1.0-release-posix-dwarf-rt_v6-rev0.7z/download -OutFile mingw32.7z
+            # 使用 curl 下载 32 位 MinGW 工具链
+            curl -L -o mingw32.7z https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/8.1.0/threads-posix/dwarf/i686-8.1.0-release-posix-dwarf-rt_v6-rev0.7z/download
             # 解压文件
             7z x mingw32.7z -oC:/mingw32
             # 将 32 位工具链路径添加到 PATH
