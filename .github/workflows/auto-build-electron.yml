@@ -57,18 +57,23 @@ jobs:
             # 将 32 位工具链路径添加到 PATH
             $env:PATH = "C:/mingw32/bin;$env:PATH"
             gcc --version  # 验证 gcc 版本是否为 32 位
-
-        - name: Setup and build on Windows ${{ matrix.arch }}
-          if: runner.os == 'Windows'
-          run: |
             ./bootstrap_install_mage.bat
             $env:GOARCH="${{ matrix.arch }}"
-            if ($env:GOARCH -eq "386") {
-              $env:CC="gcc -m32"
-              $env:CXX="g++ -m32"
-            }
-            gcc --version  # 验证 gcc 版本是否为 32 位
+            $env:CC="gcc -m32"
+            $env:CXX="g++ -m32"
             mage ${{ matrix.build }}
+
+        # - name: Setup and build on Windows ${{ matrix.arch }}
+        #   if: runner.os == 'Windows'
+        #   run: |
+        #     ./bootstrap_install_mage.bat
+        #     $env:GOARCH="${{ matrix.arch }}"
+        #     if ($env:GOARCH -eq "386") {
+        #       $env:CC="gcc -m32"
+        #       $env:CXX="g++ -m32"
+        #     }
+        #     gcc --version  # 验证 gcc 版本是否为 32 位
+        #     mage ${{ matrix.build }}
 
         # - name: Setup and build on Windows ${{ matrix.arch }}
         #   if: runner.os == 'Windows'
