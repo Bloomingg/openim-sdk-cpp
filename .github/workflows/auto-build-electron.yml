@@ -51,13 +51,8 @@ jobs:
         - name: Setup and build on Windows ${{ matrix.arch }}
           if: runner.os == 'Windows'
           run: |
-            $env:GOARCH="${{ matrix.arch }}"
-            echo "GOARCH is set to $env:GOARCH"
-
-        - name: Setup and build on Windows ${{ matrix.arch }}
-          if: runner.os == 'Windows'
-          run: |
             ./bootstrap_install_mage.bat
+            $env:GOARCH="${{ matrix.arch }}"
             mage ${{ matrix.build }}
 
         # - name: Setup and build on Windows ${{ matrix.arch }}
