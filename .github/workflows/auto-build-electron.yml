@@ -67,6 +67,7 @@ jobs:
               $env:CC="gcc -m32"
               $env:CXX="g++ -m32"
             }
+            gcc --version  # 验证 gcc 版本是否为 32 位
             mage ${{ matrix.build }}
 
         # - name: Setup and build on Windows ${{ matrix.arch }}
