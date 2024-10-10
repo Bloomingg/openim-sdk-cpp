@@ -51,12 +51,7 @@ jobs:
 
         - name: Install MinGW-w64 using Chocolatey
           run: |
-            # 使用 curl 下载 32 位 MinGW 工具链
-            curl -L -o mingw32.7z https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/8.1.0/threads-posix/dwarf/i686-8.1.0-release-posix-dwarf-rt_v6-rev0.7z/download
-            # 解压文件
-            7z x mingw32.7z -oC:/mingw32
-            # 将 32 位工具链路径添加到 PATH
-            echo "PATH=C:/mingw32/bin:$PATH" >> $GITHUB_ENV
+            $env:PATH = "C:/mingw32/bin;$env:PATH"
             gcc --version  # 验证 gcc 版本是否为 32 位
 
 
